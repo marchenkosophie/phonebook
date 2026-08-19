@@ -12,6 +12,7 @@ class LoginPage:
     PASSWORD_INPUT = (By.CSS_SELECTOR, "input[name='password']")
     LOGIN_BTN = (By.XPATH, "//button[text()='Login']")
     SIGN_OUT_BTN = (By.XPATH, "//*[text()='Sign Out']")
+    REGISTRATION_BTN = (By.XPATH, "//button[text()='Registration']")
 
 
     def __init__(self, driver):
@@ -57,3 +58,6 @@ class LoginPage:
 
     def accept_alert(self):
         self.driver.switch_to.alert.accept()
+
+    def submit_registration(self):
+        self.driver.find_element(*self.REGISTRATION_BTN).click()
