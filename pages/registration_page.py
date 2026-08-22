@@ -58,3 +58,7 @@ class RegistrationPage:
     def accept_alert(self):
         self.driver.switch_to.alert.accept()
 
+    def fill_registration_form(self, user):
+        self.fill_email(user.email)
+        self.fill_password(user.password)
+

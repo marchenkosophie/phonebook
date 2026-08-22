@@ -1,9 +1,8 @@
+import uuid
+
+from models.user import User
 from pages.registration_page import RegistrationPage
 
-VALID_EMAIL = "sophie123@gmail.com"
-VALID_PASSWORD = "Qwerty123$"
-INVALID_EMAIL = "margogmail.com"
-INVALID_PASSWORD = "MMar123"
 
 
 def test_registration_success(driver):
@@ -11,8 +10,14 @@ def test_registration_success(driver):
 
     registration_page.open_registration_form()
 
-    registration_page.fill_email(VALID_EMAIL)
-    registration_page.fill_password(VALID_PASSWORD)
+    random_suffix = uuid.uuid4().hex[:8]
+    user = User(
+        f"test{random_suffix}@gmail.com",
+        "Password11$"
+    )
+
+    registration_page.fill_registration_form(user)
+
     registration_page.submit_registration()
 
     assert registration_page.is_registered() is True
@@ -21,10 +26,12 @@ def test_registration_success(driver):
 def test_registration_wrong_email(driver):
     registration_page = RegistrationPage(driver)
     registration_page.open_registration_form()
+    user = User(
+        "testgmail.com",
+        "Password11$"
+    )
 
-
-    registration_page.fill_email(INVALID_EMAIL)
-    registration_page.fill_password(VALID_PASSWORD)
+    registration_page.fill_registration_form(user)
     registration_page.submit_registration()
 
 
@@ -35,9 +42,12 @@ def test_registration_wrong_email(driver):
 def test_registration_wrong_password(driver):
     registration_page = RegistrationPage(driver)
     registration_page.open_registration_form()
+    user = User(
+        "test@gmail.com",
+        "pas12"
+    )
 
-    registration_page.fill_email(VALID_EMAIL)
-    registration_page.fill_password(INVALID_PASSWORD)
+    registration_page.fill_registration_form(user)
     registration_page.submit_registration()
 
     assert "Wrong email or password" in registration_page.get_alert_text()
@@ -48,8 +58,12 @@ def test_registration_registered_user(driver):
     registration_page = RegistrationPage(driver)
     registration_page.open_registration_form()
 
-    registration_page.fill_email("sophie@gmail.com")
-    registration_page.fill_password("Qwerty123$")
+    user = User(
+        "sophie@gmail.com",
+        "Qwerty123$"
+    )
+
+    registration_page.fill_registration_form(user)
     registration_page.submit_registration()
 
     assert registration_page.get_alert_text() == "User already exist"
